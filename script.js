@@ -81,6 +81,8 @@ async function initialize() {
     if (isLocalEnvironment()) {
       enableLocalMode();
     } else {
+      ownerButton.hidden = true;
+      document.querySelector("#empty-add-project").hidden = true;
       renderEntries();
       renderProjects();
       projectStatus.textContent = "Public site is online. Portfolio editing will be available after secure storage is connected.";
