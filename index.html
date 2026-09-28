@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f6f2">
+    <meta name="description" content="The personal portfolio and CV of Buhle Hakata, an Information and Communication Technology student at Mangosuthu University of Technology.">
+    <link rel="canonical" href="https://hakatabuhle-ops.github.io/">
+    <meta property="og:url" content="https://hakatabuhle-ops.github.io/">
+    <meta property="og:title" content="Buhle Hakata | ICT Student &amp; Portfolio">
+    <meta property="og:description" content="The personal portfolio and CV of Buhle Hakata, an Information and Communication Technology student at Mangosuthu University of Technology.">
+    <title>Buhle Hakata | ICT Student &amp; Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="config.js" defer></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="wordmark" href="#home" aria-label="Buhle Hakata home">BH<span>.</span></a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#about">About</a>
+        <a href="#education">Education</a>
+        <a href="#skills">Skills</a>
+        <a href="#work">My work</a>
+        <a href="#experience">Experience</a>
+      </nav>
+      <div class="header-actions">
+        <button class="button button-text owner-button" id="owner-button" type="button">Owner login</button>
+        <button class="button button-outline print-button" id="print-cv" type="button">Print / Save CV <span aria-hidden="true">↗</span></button>
+      </div>
+    </header>
+
+    <main>
+      <section class="owner-panel section-wrap" id="owner-panel" aria-label="Portfolio owner controls" hidden>
+        <form id="login-form">
+          <div class="form-heading">
+            <div><p class="eyebrow">PRIVATE OWNER ACCESS</p><h2>Sign in to manage your portfolio.</h2></div>
+            <button class="icon-button" id="close-owner-panel" type="button" aria-label="Close owner panel">×</button>
+          </div>
+          <div class="login-fields">
+            <label class="field">Email address
+              <input name="email" type="email" autocomplete="username" required>
+            </label>
+            <label class="field">Password
+              <input name="password" type="password" autocomplete="current-password" required>
+            </label>
+            <button class="button button-dark" type="submit">Sign in <span aria-hidden="true">↗</span></button>
+          </div>
+          <p class="form-message" id="login-message" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="profile-editor" id="profile-editor" hidden>
+          <div class="form-heading">
+            <div><p class="eyebrow" id="profile-editor-eyebrow">YOUR PUBLIC PROFILE</p><h2>Keep your details up to date.</h2></div>
+            <div class="owner-profile-actions">
+              <button class="button button-text" id="sign-out" type="button">Sign out</button>
+              <button class="icon-button" id="close-profile-editor" type="button" aria-label="Close profile editor">×</button>
+            </div>
+          </div>
+          <p class="local-mode-note" id="local-mode-note" hidden>Local editing mode: there is no password protection, and changes are saved only in this browser. They are not published for visitors. Connect Supabase to make your updates public.</p>
+          <p class="public-data-note">Anything you add to your profile, CV, projects, skills, qualifications, experience, contact email, and social links is intended for public viewing. Do not enter passwords or other sensitive information here.</p>
+          <form id="profile-form">
+            <div class="form-grid">
+              <label class="field">Full name
+                <input name="name" maxlength="80" required>
+              </label>
+              <label class="field">Study stage
+                <input name="study_stage" maxlength="80" placeholder="e.g. Second-year student" required>
+              </label>
+              <label class="field">Qualification
+                <input name="qualification" maxlength="120" required>
+              </label>
+              <label class="field">University
+                <input name="university" maxlength="120" required>
+              </label>
+              <label class="field">Location
+                <input name="location" maxlength="100">
+              </label>
+              <label class="field">Short introduction
+                <input name="tagline" maxlength="180" required>
+              </label>
+              <label class="field field-wide">About me
+                <textarea name="about_lead" rows="2" maxlength="300" required></textarea>
+              </label>
+              <label class="field field-wide">More about me
+                <textarea name="about_body" rows="3" maxlength="600" required></textarea>
+              </label>
+              <label class="field field-wide">Closing note
+                <input name="about_note" maxlength="120">
+              </label>
+              <label class="field">Professional title
+                <input name="role_title" maxlength="100" placeholder="e.g. ICT Student & Aspiring Developer">
+              </label>
+              <label class="field">Contact email
+                <input name="contact_email" type="email" maxlength="160">
+              </label>
+              <label class="field">GitHub profile
+                <input name="github_url" type="text" inputmode="url" maxlength="300" placeholder="Paste your GitHub profile link">
+              </label>
+              <label class="field">LinkedIn profile
+                <input name="linkedin_url" type="text" inputmode="url" maxlength="300" placeholder="Paste your LinkedIn profile link">
+              </label>
+              <label class="field field-wide">Other technical profile <span class="optional-label">(optional, e.g. Dev.to or X)</span>
+                <input name="other_url" type="text" inputmode="url" maxlength="300" placeholder="Paste your profile link">
+              </label>
+              <label class="field field-wide">CV / resume PDF <span class="optional-label">(optional, up to 10 MB)</span>
+                <input name="resume" type="file" accept="application/pdf,.pdf">
+              </label>
+              <p class="existing-attachment" id="existing-resume" hidden></p>
+            </div>
+            <div class="form-footer">
+              <p class="form-message" id="profile-message" role="status" aria-live="polite"></p>
+              <button class="button button-dark" type="submit">Save profile <span aria-hidden="true">↗</span></button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="hero section-wrap" id="home" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> <span id="hero-status">ICT student · Durban, South Africa</span></p>
+          <h1 id="hero-title">Hello, I'm<br><span class="hero-name" id="profile-name">Buhle Hakata.</span></h1>
+          <p class="hero-role" id="profile-role">Information and Communication Technology Student</p>
+          <p class="hero-intro" id="profile-tagline">I enjoy learning how technology works and building my skills through coursework and projects. I'm growing my knowledge in ICT and documenting what I learn here.</p>
+          <div class="hero-actions">
+            <a class="button button-dark" href="#work">View projects <span aria-hidden="true">↓</span></a>
+            <a class="button button-outline" id="resume-link" href="#contact" hidden>Download CV <span aria-hidden="true">↓</span></a>
+            <a class="text-link" href="#about">A little about me <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="hero-meta" aria-label="Quick facts">
+            <div><span class="meta-label">Studying</span><span id="profile-qualification">Information and Communication Technology</span></div>
+            <div><span class="meta-label">At</span><span id="profile-university">Mangosuthu University of Technology</span></div>
+          </div>
+        </div>
+        <div class="hero-art" aria-label="Buhle Hakata initials">
+          <div class="art-grid" aria-hidden="true"></div>
+          <div class="orbit orbit-one" aria-hidden="true"></div>
+          <div class="orbit orbit-two" aria-hidden="true"></div>
+          <div class="initials-card"><span>BH</span><small>LEARNING<br>IN PUBLIC</small></div>
+          <div class="art-caption"><span class="caption-line"></span><span>One step at a time</span></div>
+          <span class="art-spark spark-one" aria-hidden="true">✳</span>
+          <span class="art-spark spark-two" aria-hidden="true">+</span>
+        </div>
+        <a class="scroll-cue" href="#about"><span aria-hidden="true">↓</span> SCROLL TO EXPLORE</a>
+      </section>
+
+      <section class="about-section section-wrap" id="about" aria-labelledby="about-title">
+        <div class="section-heading">
+          <p class="eyebrow">01 / ABOUT ME</p>
+          <h2 id="about-title">A student with<br>a <span class="accent-text">builder's mindset.</span></h2>
+        </div>
+        <div class="about-copy">
+          <p class="about-lead" id="profile-about-lead">I'm Buhle, an Information and Communication Technology student at Mangosuthu University of Technology.</p>
+          <p id="profile-about-body">I'm building my knowledge one lesson and one project at a time. This portfolio is a growing record of what I learn and make during my studies.</p>
+          <div class="about-note"><span class="note-mark" aria-hidden="true">✳</span><span id="profile-about-note">New here, and excited for what's next.</span></div>
+        </div>
+      </section>
+
+      <section class="education-section" id="education" aria-labelledby="education-title">
+        <div class="section-wrap education-inner">
+          <div class="section-heading">
+            <p class="eyebrow">02 / EDUCATION</p>
+            <h2 id="education-title">Where I'm<br><span class="accent-text">learning.</span></h2>
+          </div>
+          <article class="education-card">
+            <div class="education-mark" aria-hidden="true">MUT<span>✳</span></div>
+            <div class="education-details">
+              <p class="education-status"><span class="status-dot" aria-hidden="true"></span> CURRENTLY STUDYING</p>
+              <h3 id="education-university">Mangosuthu University of Technology</h3>
+              <p class="degree-name" id="education-qualification">Information and Communication Technology</p>
+              <p class="education-year" id="education-stage">ICT student</p>
+            </div>
+            <span class="education-index" aria-hidden="true">01</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="skills-section section-wrap" id="skills" aria-labelledby="skills-title">
+        <div class="work-heading">
+          <div class="section-heading">
+            <p class="eyebrow">03 / SKILLS &amp; QUALIFICATIONS</p>
+            <h2 id="skills-title">What I'm<br><span class="accent-text">learning.</span></h2>
+          </div>
+          <button class="button button-outline section-add-button" data-entry-type="skill" type="button" hidden>+ Add skills</button>
+        </div>
+        <div class="skills-grid" id="skills-grid"></div>
+        <p class="empty-entries" id="skills-empty">Add your skills as you learn them, grouped into categories.</p>
+        <div class="credentials-heading">
+          <h3>Qualifications &amp; certifications</h3>
+          <button class="text-link section-add-button" data-entry-type="credential" type="button" hidden>+ Add qualification <span aria-hidden="true">↗</span></button>
+        </div>
+        <div class="credentials-list" id="credentials-list"></div>
+        <p class="empty-entries" id="credentials-empty">Add certificates, diplomas, or academic achievements as you earn them.</p>
+      </section>
+
+      <section class="work-section section-wrap" id="work" aria-labelledby="work-title">
+        <div class="work-heading">
+          <div class="section-heading">
+            <p class="eyebrow">04 / SELECTED WORK</p>
+            <h2 id="work-title">Made while<br><span class="accent-text">I'm learning.</span></h2>
+          </div>
+          <button class="button button-dark add-project-button" id="open-project-form" type="button" hidden><span aria-hidden="true">+</span> Add a project</button>
+        </div>
+        <p class="work-intro">Projects, coursework, and milestones from my ICT journey. This space will grow as I do.</p>
+        <p class="storage-notice" id="project-status" role="status" aria-live="polite">Loading projects for everyone to see...</p>
+
+        <form class="project-form" id="project-form" hidden>
+          <div class="form-heading">
+            <div><p class="eyebrow">ADD TO YOUR PORTFOLIO</p><h3 id="project-form-title">Share something you've made.</h3></div>
+            <button class="icon-button" id="close-project-form" type="button" aria-label="Close project form">×</button>
+          </div>
+          <div class="form-grid">
+            <label class="field field-wide">Project title <span class="required-mark" aria-hidden="true">*</span>
+              <input name="title" type="text" maxlength="80" placeholder="e.g. My first website" required>
+            </label>
+            <label class="field">Type
+              <select name="category">
+                <option>Project</option>
+                <option>Coursework</option>
+                <option>Certificate</option>
+                <option>Other</option>
+              </select>
+            </label>
+            <label class="field">Date
+              <input name="date" type="month">
+            </label>
+            <label class="field field-wide">A little about it <span class="required-mark" aria-hidden="true">*</span>
+              <textarea name="description" rows="3" maxlength="500" placeholder="What problem does it solve? What did you make or learn?" required></textarea>
+            </label>
+            <label class="field field-wide">Project link <span class="optional-label">(optional)</span>
+              <input name="link" type="url" maxlength="500" placeholder="https://">
+            </label>
+            <label class="field">GitHub / repository URL <span class="optional-label">(optional)</span>
+              <input name="github_url" type="url" maxlength="500" placeholder="https://github.com/...">
+            </label>
+            <label class="field">Live demo URL <span class="optional-label">(optional)</span>
+              <input name="demo_url" type="url" maxlength="500" placeholder="https://">
+            </label>
+            <label class="field field-wide">Technology tags <span class="optional-label">(comma-separated)</span>
+              <input name="tech_stack" maxlength="250" placeholder="e.g. Python, SQL, Git">
+            </label>
+            <label class="field field-wide">Key features or achievements <span class="optional-label">(one per line)</span>
+              <textarea name="features" rows="3" maxlength="500" placeholder="What does it do? What did you learn?"></textarea>
+            </label>
+            <label class="field field-wide">Attach a file <span class="optional-label">(optional, up to 10 MB)</span>
+              <input name="attachment" type="file">
+            </label>
+            <p class="existing-attachment" id="existing-attachment" hidden></p>
+          </div>
+          <div class="form-footer">
+            <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
+            <div class="form-actions">
+              <button class="button button-text" id="cancel-project" type="button">Cancel</button>
+              <button class="button button-dark" type="submit">Save project <span aria-hidden="true">↗</span></button>
+            </div>
+          </div>
+        </form>
+
+        <div class="project-grid" id="project-grid" aria-live="polite"></div>
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon" aria-hidden="true">✳</div>
+          <h3>The first project starts here.</h3>
+          <p>When you finish something you're proud of, add it to your portfolio.</p>
+          <button class="text-link" id="empty-add-project" type="button">Add your first project <span aria-hidden="true">↗</span></button>
+        </div>
+      </section>
+
+      <section class="experience-section" id="experience" aria-labelledby="experience-title">
+        <div class="section-wrap experience-inner">
+          <div class="work-heading">
+            <div class="section-heading">
+              <p class="eyebrow">05 / EXPERIENCE</p>
+              <h2 id="experience-title">Where I've<br><span class="accent-text">contributed.</span></h2>
+            </div>
+            <button class="button button-outline section-add-button" data-entry-type="experience" type="button" hidden>+ Add experience</button>
+          </div>
+          <p class="work-intro">Work, academic projects, volunteering, leadership, and other ways I've contributed.</p>
+          <div class="experience-list" id="experience-list"></div>
+          <p class="empty-entries" id="experience-empty">Add work, university projects, volunteering, or leadership experience here.</p>
+        </div>
+      </section>
+
+      <section class="contact-section section-wrap" id="contact" aria-labelledby="contact-title">
+        <div>
+          <p class="eyebrow">06 / CONTACT</p>
+          <h2 id="contact-title">Let's connect.</h2>
+          <p class="contact-copy">Have an opportunity, a project idea, or just want to say hello?</p>
+          <a class="button button-dark" id="email-link" href="mailto:" hidden>Get in touch <span aria-hidden="true">↗</span></a>
+          <p class="empty-entries" id="contact-email-empty">Add a contact email in your profile to let visitors reach you.</p>
+        </div>
+        <div class="social-links" id="social-links" aria-label="Professional links"></div>
+      </section>
+    </main>
+
+    <dialog class="entry-dialog" id="entry-dialog">
+      <form id="entry-form">
+        <div class="form-heading">
+          <div><p class="eyebrow" id="entry-dialog-eyebrow">PORTFOLIO ENTRY</p><h2 id="entry-dialog-title">Add an entry</h2></div>
+          <button class="icon-button" id="close-entry-dialog" type="button" aria-label="Close form">×</button>
+        </div>
+        <div class="form-grid" id="entry-fields"></div>
+        <p class="form-message" id="entry-message" role="status" aria-live="polite"></p>
+        <div class="form-actions">
+          <button class="button button-text" id="cancel-entry" type="button">Cancel</button>
+          <button class="button button-dark" id="save-entry" type="submit">Save entry <span aria-hidden="true">↗</span></button>
+        </div>
+      </form>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="section-wrap footer-inner">
+        <a class="wordmark" href="#home" aria-label="Back to top">BH<span>.</span></a>
+        <p>Growing, learning, and building — <span id="current-year"></span>.</p>
+        <a class="back-to-top" href="#home">BACK TO TOP <span aria-hidden="true">↑</span></a>
+      </div>
+    </footer>
+  </body>
+</html>
