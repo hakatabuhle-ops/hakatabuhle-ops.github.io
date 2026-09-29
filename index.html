@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <script src="config.js" defer></script>
-    <script src="script.js?v=public-2" defer></script>
+    <script src="script.js?v=public-3" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -93,13 +93,13 @@
                 <input name="role_title" maxlength="100" placeholder="e.g. ICT Student & Aspiring Developer">
               </label>
               <label class="field">Contact email
-                <input name="contact_email" type="email" maxlength="160">
+                <input name="contact_email" type="text" inputmode="email" autocomplete="email" maxlength="254" placeholder="you@example.com">
               </label>
               <label class="field">GitHub profile
-                <input name="github_url" type="text" inputmode="url" maxlength="300" placeholder="Paste your GitHub profile link">
+                <input name="github_url" type="text" inputmode="url" maxlength="300" placeholder="github.com/username or username">
               </label>
               <label class="field">LinkedIn profile
-                <input name="linkedin_url" type="text" inputmode="url" maxlength="300" placeholder="Paste your LinkedIn profile link">
+                <input name="linkedin_url" type="text" inputmode="url" maxlength="300" placeholder="linkedin.com/in/your-name">
               </label>
               <label class="field field-wide">Other technical profile <span class="optional-label">(optional, e.g. Dev.to or X)</span>
                 <input name="other_url" type="text" inputmode="url" maxlength="300" placeholder="Paste your profile link">

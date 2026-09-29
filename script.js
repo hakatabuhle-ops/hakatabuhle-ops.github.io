@@ -306,10 +306,10 @@ async function saveProfile(event) {
       .map((key) => [key, String(data.get(key) ?? "").trim()])
   );
   try {
-    for (const key of ["github_url", "linkedin_url", "other_url"]) {
-      updated[key] = normalizeWebUrl(updated[key]);
-    }
-    updated.github_url = normalizeSocialUrl("GitHub", updated.github_url);
+    updated.contact_email = normalizeContactEmail(updated.contact_email);
+    updated.github_url = normalizeProfileUrl("GitHub", updated.github_url);
+    updated.linkedin_url = normalizeProfileUrl("LinkedIn", updated.linkedin_url);
+    updated.other_url = normalizeWebUrl(updated.other_url);
   } catch (error) {
     profileMessage.textContent = error.message;
     saveButton.disabled = false;
@@ -452,9 +452,10 @@ function isSafeLink(value) {
 }
 
 function normalizeWebUrl(value) {
-  const text = value.trim();
+  const text = cleanCopiedValue(value).replace(/^<([^<>]+)>$/, "$1");
   if (!text) return "";
-  const withProtocol = /^[a-z][a-z\d+.-]*:/i.test(text) ? text : `https://${text}`;
+  if (/\s/.test(text)) throw new Error("Remove spaces from the profile link and try again.");
+  const withProtocol = /^https?:\/\//i.test(text) ? text : `https://${text.replace(/^\/\//, "")}`;
   try {
     const url = new URL(withProtocol);
     if (url.protocol !== "https:" && url.protocol !== "http:") throw new Error();
@@ -463,6 +464,43 @@ function normalizeWebUrl(value) {
   } catch {
     throw new Error("Please paste a valid profile link, such as linkedin.com/in/your-name.");
   }
+}
+
+function cleanCopiedValue(value) {
+  return String(value)
+    .normalize("NFKC")
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")
+    .replace(/\u00A0/g, " ")
+    .trim();
+}
+
+function normalizeContactEmail(value) {
+  let email = cleanCopiedValue(value).replace(/^mailto:/i, "");
+  const wrappedAddress = email.match(/<([^<>]+)>$/);
+  if (wrappedAddress) email = wrappedAddress[1].trim();
+  if (!email) return "";
+
+  const validEmail = /^[A-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?(?:\.[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?)+$/i;
+  if (email.length > 254 || !validEmail.test(email)) {
+    throw new Error("Enter a valid email address, for example name@example.com.");
+  }
+  return email;
+}
+
+function normalizeProfileUrl(label, value) {
+  let text = cleanCopiedValue(value);
+  if (!text) return "";
+  if (!/[./:]/.test(text)) {
+    text = text.replace(/^@/, "");
+    if (label === "GitHub" && /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/.test(text)) {
+      return `https://github.com/${text}`;
+    }
+    if (label === "LinkedIn" && /^[A-Za-z0-9-]{1,100}$/.test(text)) {
+      return `https://www.linkedin.com/in/${text}/`;
+    }
+  }
+  const url = normalizeWebUrl(text);
+  return label === "GitHub" ? normalizeSocialUrl(label, url) : url;
 }
 
 function safeFileName(name) {
