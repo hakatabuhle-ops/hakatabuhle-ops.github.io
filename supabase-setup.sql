@@ -115,7 +115,7 @@ returns boolean
 language sql
 stable
 as $$
-  select (select auth.uid()) = 'OWNER_USER_ID'::uuid
+  select (select auth.uid()) = '47a18a0e-0390-4cdd-ad17-6cff5c14ea2e'::uuid
 $$;
 
 revoke all on function public.is_portfolio_owner() from public, anon;

@@ -26,12 +26,12 @@ Until the custom domain is registered and connected, the site's canonical and so
 
 ## One-time Supabase setup
 
-The site uses Supabase for public profile and project data, private owner sign-in, and public project attachments. Until Supabase is configured, the site falls back to **local editing mode** so you can manage your profile and projects in your current browser. That mode has no password protection and does not publish changes for visitors. The browser uses only the Supabase **project URL** and **publishable/anon key**. Never put a Supabase `service_role` or secret key in this site.
+The site uses Supabase for public profile and project data, private owner sign-in, and public project attachments. The browser uses only the Supabase **project URL** and **publishable/anon key**. Never put a Supabase `service_role` or secret key in this site.
 
 1. Create a Supabase project at [supabase.com](https://supabase.com/).
-2. In **Authentication → Users**, add Buhle's owner account. Copy that user's UUID.
-3. Open `supabase-setup.sql`, replace `OWNER_USER_ID` with the UUID (keep the single quotes), then run the complete script in the Supabase **SQL Editor**. This creates or updates the profile and project tables, a skills/qualifications/experience table, public read access, owner-only write policies, and public attachments bucket. Only that UUID can edit the portfolio, even if someone else creates a Supabase account. If you already ran an older version of this script, rerun it after replacing the UUID to add the new fields and table.
-4. In **Project Settings → API**, copy the project URL and publishable/anon key into `config.js`:
+2. In **Authentication → Users**, add Buhle's owner account. The UID configured for this site is `47a18a0e-0390-4cdd-ad17-6cff5c14ea2e`.
+3. The schema, access rules, and public attachments bucket are defined in `supabase-setup.sql`. The owner ID in its security function must match the UID above. The SQL has already been run for the current Supabase project.
+4. The project's URL and publishable key are configured in `config.js`. If changing Supabase projects, update those values using **Project Settings → API**:
 
    ```js
    window.PORTFOLIO_CONFIG = {
@@ -41,8 +41,8 @@ The site uses Supabase for public profile and project data, private owner sign-i
    };
    ```
 
-   The URL and publishable/anon key are intended for browser use. Keep the owner UUID in sync with the one used in the SQL function.
-5. In **Authentication → URL Configuration**, add your published website URL to the allowed redirect URLs. For local testing, add `http://localhost:8000/**`.
+   The URL and publishable/anon key are intended for browser use. Never use a `service_role` or secret key here.
+5. In **Authentication → URL Configuration**, set the site URL to `https://hakatabuhle-ops.github.io` and add it to the allowed redirect URLs. For local testing, add `http://localhost:8000/**`.
 6. The site is published at `https://hakatabuhle-ops.github.io/` using the public `hakatabuhle-ops.github.io` repository. Serve the site over HTTP rather than opening the HTML as a `file://` URL; Supabase sign-in requires a website origin.
 
 ## Run locally
